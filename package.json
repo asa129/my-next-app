@@ -20,7 +20,8 @@
 		"hono": "^4.8.10",
 		"next": "15.3.5",
 		"react": "^19.0.0",
-		"react-dom": "^19.0.0"
+		"react-dom": "^19.0.0",
+		"react-dropzone": "^14.3.8"
 	},
 	"devDependencies": {
 		"@eslint/eslintrc": "^3",
