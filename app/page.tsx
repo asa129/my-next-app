@@ -9,18 +9,22 @@ type UploadResult = {
   expiresAt?: string;
 };
 
+type ExpirationOption = 1 | 3 | 5 | 7;
+
 export default function Home() {
   const [file, setFile] = useState<File | null>(null);
   const [fileName, setFileName] = useState<string>("");
   const [uploading, setUploading] = useState<boolean>(false);
   const [uploadResult, setUploadResult] = useState<UploadResult | null>(null);
-  const onDrop = useCallback((acceptedFiles: File[]) => {
+  const [expiration, setExpiration] = useState<ExpirationOption>(7);
+
+  const onDrop = (acceptedFiles: File[]) => {
     if (acceptedFiles.length > 0) {
       const file = acceptedFiles[0];
       setFile(file);
       setFileName(file.name);
     }
-  }, []);
+  };
   const handleUpload = async () => {
     if (!file) return;
     setUploading(true);
@@ -28,7 +32,7 @@ export default function Home() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("expiration", "7");
+      formData.append("expiration", String(expiration));
 
       const response = await fetch("api/upload", {
         method: "POST",
@@ -62,8 +66,10 @@ export default function Home() {
   };
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
   return (
-    <div className="container mx-auto p-4 max-w-md">
-      <h1 className="text-2xl font-bold mb-4">ファイル共有アプリ</h1>
+    <div className="max-w-2xl mx-auto my-8">
+      <h1 className="text-2xl font-bold mb-6 text-center">
+        ファイル共有アプリ
+      </h1>
       <div
         {...getRootProps()}
         className={`border-2 border-dashed rounded-lg p-8 mb-4 text-center cursor-pointer transition-colors  ${
@@ -83,6 +89,25 @@ export default function Home() {
       {file && (
         <div>
           <p>ファイル名：{fileName}</p>
+
+          <div className="my-4">
+            <label className="block mb-2">
+              有効期限:
+              <select
+                value={expiration}
+                onChange={(e) =>
+                  setExpiration(Number(e.target.value) as ExpirationOption)
+                }
+                className="ml-2 p-1 border rounded"
+              >
+                <option value={1}>1日</option>
+                <option value={3}>3日</option>
+                <option value={5}>5日</option>
+                <option value={7}>7日</option>
+              </select>
+            </label>
+          </div>
+
           <button
             onClick={handleUpload}
             disabled={uploading}

@@ -1,0 +1,37 @@
+import FileDownloadClient from "./client";
+
+export type FileInfo = {
+  id: string;
+  fileName: string;
+  filePath: string;
+  contentType: string;
+  expiresAt: string;
+  createdAt: string;
+};
+
+async function getFileInfo(fileId: string) {
+  const baseUrl = process.env.HOST_URL || "http://localhost:8787";
+  const response = await fetch(`${baseUrl}/api/files/${fileId}`);
+  return (await response.json()) as FileInfo;
+}
+export default async function Page({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const fileInfo = await getFileInfo((await params).id);
+
+  if (!fileInfo) {
+    return <div>ファイルが見つかりませんでした</div>;
+  }
+
+  const now = new Date();
+  const expiresAt = new Date(fileInfo.expiresAt);
+  const isExpired = now > expiresAt;
+
+  if (isExpired) {
+    return <div>ファイルの有効期限切れ</div>;
+  }
+
+  return <FileDownloadClient fileId={fileInfo.id} />;
+}
