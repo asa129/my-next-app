@@ -10,7 +10,7 @@ export type FileInfo = {
 };
 
 async function getFileInfo(fileId: string) {
-  const baseUrl = process.env.HOST_URL || "http://localhost:8787";
+  const baseUrl = process.env.BASE_URL;
   const response = await fetch(`${baseUrl}/api/files/${fileId}`);
   return (await response.json()) as FileInfo;
 }
