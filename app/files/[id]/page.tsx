@@ -1,5 +1,5 @@
 import FileDownloadClient from "./client";
-import ExpiredClient from "./expiredClient";
+import ErrorClient from "./errorClient";
 
 export type FileInfo = {
   id: string;
@@ -13,7 +13,13 @@ export type FileInfo = {
 async function getFileInfo(fileId: string) {
   const baseUrl = process.env.BASE_URL;
   const response = await fetch(`${baseUrl}/api/files/${fileId}`);
-  return (await response.json()) as FileInfo;
+  try {
+    const fileInfo = (await response.json()) as FileInfo;
+    return fileInfo;
+  } catch (error) {
+    console.error("Error fetching file info:", error);
+    return null;
+  }
 }
 export default async function Page({
   params,
@@ -23,7 +29,7 @@ export default async function Page({
   const fileInfo = await getFileInfo((await params).id);
 
   if (!fileInfo) {
-    return <div>ファイルが見つかりませんでした</div>;
+    return <ErrorClient error="notFound" />;
   }
 
   const now = new Date();
@@ -31,7 +37,7 @@ export default async function Page({
   const isExpired = now > expiresAt;
 
   if (isExpired) {
-    return <ExpiredClient />;
+    return <ErrorClient error="isExpired" />;
   }
 
   return <FileDownloadClient fileId={fileInfo.id} />;
