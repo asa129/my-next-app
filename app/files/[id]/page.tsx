@@ -1,4 +1,5 @@
 import FileDownloadClient from "./client";
+import ExpiredClient from "./expiredClient";
 
 export type FileInfo = {
   id: string;
@@ -30,7 +31,7 @@ export default async function Page({
   const isExpired = now > expiresAt;
 
   if (isExpired) {
-    return <div>ファイルの有効期限切れ</div>;
+    return <ExpiredClient />;
   }
 
   return <FileDownloadClient fileId={fileInfo.id} />;

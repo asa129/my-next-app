@@ -19,6 +19,7 @@ app.get("/files", async (c) => {
 app.post("/upload", async (c) => {
   const formData = await c.req.formData();
   const fileData = formData.get("file");
+  const fileNameByForm = formData.get("fileName");
   const expirationDays = formData.get("expiration");
 
   if (!fileData) {
@@ -29,7 +30,7 @@ app.post("/upload", async (c) => {
   }
 
   const file = fileData as File;
-  const fileName = file.name;
+  const fileName = (fileNameByForm as string) || file.name;
   const filePath = `uploads/${Date.now()}-${fileName}`;
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + Number(expirationDays));

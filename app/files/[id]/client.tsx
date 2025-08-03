@@ -13,7 +13,7 @@ function FileDownloadClient({ fileId }: { fileId: string }) {
       <div className="p-4 bg-green-50 border border-green-200 rounded mb-6">
         <button
           onClick={handleDownload}
-          className="p-4 bg-green-50 border border-green-200 rounded mb-6"
+          className="block w-full bg-blue-500 text-white text-center py-2 px-4 rounded hover:bg-blue-600"
         >
           ファイルをダウンロード
         </button>

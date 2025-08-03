@@ -35,6 +35,7 @@ export default function Home() {
     try {
       const formData = new FormData();
       formData.append("file", file);
+      formData.append("fileName", fileName);
       formData.append("expiration", String(expiration));
 
       const response = await fetch("api/upload", {
