@@ -73,7 +73,7 @@ export default function Home() {
 
   return (
     <div className="max-w-2xl mx-auto my-8">
-      <h1 className="text-2xl font-bold mb-6 text-center">
+      <h1 className="text-2xl font-bold mb-6 text-center" data-testid="title">
         ファイル共有アプリ
       </h1>
       <div className="border border-[#e0e0e0] rounded shadow-sm overflow-hidden">
